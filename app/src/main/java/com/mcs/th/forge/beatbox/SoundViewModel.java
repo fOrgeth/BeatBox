@@ -24,4 +24,7 @@ public class SoundViewModel extends BaseObservable {
     public String getTitle() {
         return mSound.getName();
     }
+
+    public void onButtonClicked() {
+    }
 }
