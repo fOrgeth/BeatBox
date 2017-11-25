@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+
 
 import com.mcs.th.forge.beatbox.databinding.FragmentBeatBoxBinding;
 import com.mcs.th.forge.beatbox.databinding.ListItemSoundBinding;
@@ -26,18 +28,42 @@ public class BeatBoxFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         mBeatBox = new BeatBox(getActivity());
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentBeatBoxBinding binding = DataBindingUtil
+        final FragmentBeatBoxBinding binding = DataBindingUtil
                 .inflate(inflater, R.layout.fragment_beat_box, container, false);
         binding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.recyclerView.setAdapter(new SoundAdapter(mBeatBox.getSounds()));
+        int rate = Math.round(mBeatBox.getSpeedRate() * 100);
+        binding.seekBarLabel.setText(getString(R.string.playback_bar_label_text_format, rate));
+        binding.playbackBar.setProgress(rate - 50);
+        binding.playbackBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float speedRate;
+                speedRate = progress * 0.01f + 0.5f;
+                mBeatBox.setSpeedRate(speedRate);
+                binding.seekBarLabel.setText(getString(R.string.playback_bar_label_text_format, progress + 50));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         return binding.getRoot();
     }
+
 
     private class SoundHolder extends RecyclerView.ViewHolder {
         private ListItemSoundBinding mBinding;
@@ -79,5 +105,11 @@ public class BeatBoxFragment extends Fragment {
         public int getItemCount() {
             return mSounds.size();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBeatBox.release();
     }
 }
