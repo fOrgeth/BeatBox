@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools">
-<data>
-    <variable
-        name="viewModel"
-        type="com.mcs.th.forge.beatbox.SoundViewModel"/>
-</data>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-<Button
-    android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:text="@{viewModel.title}"
-    tools:text="Sound name"/>
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mcs.th.forge.beatbox.SoundViewModel"/>
+    </data>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:onClick="@{() -> viewModel.onButtonClicked()}"
+        android:text="@{viewModel.title}"
+        tools:text="Sound name"/>
 </layout>
